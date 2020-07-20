@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lightning_chat/widgets/rounded_button.dart';
 import 'package:lightning_chat/widgets/rounded_text_field.dart';
+import 'package:lightning_chat/screens/chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String sName = 'login';
@@ -9,6 +11,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String email, password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icons.email,
                 color: Colors.grey,
               ),
-              handleChanged: (value) {},
+              keyboardType: TextInputType.emailAddress,
+              handleChanged: (value) {
+                email = value.toString().trim();
+              },
             ),
             SizedBox(
               height: 8.0,
@@ -46,7 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icons.lock,
                 color: Colors.grey,
               ),
-              handleChanged: (value) {},
+              obscureText: true,
+              handleChanged: (value) {
+                password = value.toString().trim();
+              },
             ),
             SizedBox(
               height: 24.0,
@@ -54,7 +65,19 @@ class _LoginScreenState extends State<LoginScreen> {
             RoundedButton(
               title: 'Log In',
               color: Colors.lightBlueAccent,
-              handlePressed: () {},
+              handlePressed: () async {
+                try {
+                  final _user = await _auth.signInWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                  if (_user != null) {
+                    await Navigator.pushNamed(context, ChatScreen.sName);
+                  }
+                } on Exception catch (e) {
+                  print(e);
+                }
+              },
             ),
           ],
         ),

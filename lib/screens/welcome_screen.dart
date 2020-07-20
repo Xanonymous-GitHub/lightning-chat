@@ -80,7 +80,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             RoundedButton(
               title: 'Log In',
               color: Colors.deepPurple,
-              handlePressed: () => Navigator.pushNamed(
+              handlePressed: () async => await Navigator.pushNamed(
                 context,
                 LoginScreen.sName,
               ),
@@ -88,7 +88,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             RoundedButton(
               title: 'Register',
               color: Colors.lightBlue,
-              handlePressed: () => Navigator.pushNamed(
+              handlePressed: () async => await Navigator.pushNamed(
                 context,
                 RegistrationScreen.sName,
               ),

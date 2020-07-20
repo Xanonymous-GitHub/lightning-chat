@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lightning_chat/widgets/rounded_button.dart';
 import 'package:lightning_chat/widgets/rounded_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lightning_chat/screens/chat_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static final String sName = 'registration';
@@ -9,6 +11,9 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String email, password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +40,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Icons.email,
                 color: Colors.grey,
               ),
-              handleChanged: (value) {},
+              keyboardType: TextInputType.emailAddress,
+              handleChanged: (value) {
+                email = value.toString().trim();
+              },
             ),
             SizedBox(
               height: 8.0,
@@ -46,7 +54,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Icons.lock,
                 color: Colors.grey,
               ),
-              handleChanged: (value) {},
+              obscureText: true,
+              handleChanged: (value) {
+                password = value.toString().trim();
+              },
             ),
             SizedBox(
               height: 24.0,
@@ -54,7 +65,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             RoundedButton(
               title: 'Register',
               color: Colors.blueAccent,
-              handlePressed: () {},
+              handlePressed: () async {
+                try {
+                  final _newUser = await _auth.createUserWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                  if (_newUser != null) {
+                    await Navigator.pushNamed(context, ChatScreen.sName);
+                  }
+                } on Exception catch (e) {
+                  print(e);
+                }
+              },
             ),
           ],
         ),
