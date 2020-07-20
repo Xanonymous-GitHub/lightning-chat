@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "413443425694",
+    "firebase_url": "https://mrcoding-lightning-chat.firebaseio.com",
+    "project_id": "mrcoding-lightning-chat",
+    "storage_bucket": "mrcoding-lightning-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413443425694:android:34483ad6f468beac18028f",
+        "android_client_info": {
+          "package_name": "org.mrcoding.lightning_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413443425694-blp4gm4l4ptbs7o2rl5mmc4qnit37k8d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdlJYwT1dQr6bWA30q83lH0cVbdQUiDko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413443425694-blp4gm4l4ptbs7o2rl5mmc4qnit37k8d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
