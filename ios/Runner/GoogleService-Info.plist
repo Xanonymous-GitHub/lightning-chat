@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>413443425694-p43jcb44d3n89lf5sberp1ht6lnq85hf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.413443425694-p43jcb44d3n89lf5sberp1ht6lnq85hf</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAUNsC2qVSHg8d7h-sB_EW8axkO09VfHtA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>413443425694</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.mrcoding.lightningChat</string>
+	<key>PROJECT_ID</key>
+	<string>mrcoding-lightning-chat</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mrcoding-lightning-chat.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:413443425694:ios:9dbbbe4973c2027e18028f</string>
+	<key>DATABASE_URL</key>
+	<string>https://mrcoding-lightning-chat.firebaseio.com</string>
+</dict>
+</plist>
