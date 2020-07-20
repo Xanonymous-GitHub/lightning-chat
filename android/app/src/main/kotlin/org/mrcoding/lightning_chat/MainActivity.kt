@@ -1,4 +1,4 @@
-package com.example.lightning_chat
+package org.mrcoding.lightning_chat
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -60,7 +60,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
                 ColorizeAnimatedTextKit(
-                  text: ['Flash Chat'],
+                  text: ['Mr.Coding'],
                   colors: [
                     Colors.purple,
                     Colors.blue,
