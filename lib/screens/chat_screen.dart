@@ -3,6 +3,7 @@ import 'package:lightning_chat/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lightning_chat/widgets/message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
   static final String sName = 'chat';
@@ -51,6 +52,10 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.close),
               onPressed: () async {
                 await _auth.signOut();
+                SharedPreferences _sharedPreferences =
+                    await SharedPreferences.getInstance();
+                _sharedPreferences.remove('userEmail');
+                _sharedPreferences.remove('userPassword');
                 Navigator.pop(context);
               }),
         ],

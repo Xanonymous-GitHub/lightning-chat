@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lightning_chat/screens/login_screen.dart';
+import 'package:lightning_chat/screens/welcome_screen.dart';
 import 'package:lightning_chat/widgets/rounded_button.dart';
 import 'package:lightning_chat/widgets/rounded_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:lightning_chat/utils/login.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static final String sName = 'registration';
@@ -95,8 +96,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       email: email,
                       password: password,
                     );
-                    if (_newUser != null) {
-                      await Navigator.pushNamed(context, LoginScreen.sName);
+                    final _user = await login(email: email, password: password);
+                    if (_newUser != null && _user != null) {
+                      await Navigator.pushNamed(context, WelcomeScreen.sName);
                     }
                   } on Exception catch (e) {
                     print(e);

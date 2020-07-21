@@ -4,6 +4,7 @@ import 'package:lightning_chat/widgets/rounded_button.dart';
 import 'package:lightning_chat/widgets/rounded_text_field.dart';
 import 'package:lightning_chat/screens/chat_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:lightning_chat/utils/login.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String sName = 'login';
@@ -91,12 +92,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     showSpinner = true;
                   });
                   try {
-                    final _user = await _auth.signInWithEmailAndPassword(
-                      email: email,
-                      password: password,
-                    );
+                    final _user = await login(email: email, password: password);
                     if (_user != null) {
-                      await Navigator.pushNamed(context, ChatScreen.sName);
+                      await Navigator.pushReplacementNamed(
+                          context, ChatScreen.sName);
                     }
                   } on Exception catch (e) {
                     print(e);
