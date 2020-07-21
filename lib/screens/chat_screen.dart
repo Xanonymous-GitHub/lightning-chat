@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lightning_chat/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lightning_chat/widgets/message.dart';
 
 class ChatScreen extends StatefulWidget {
   static final String sName = 'chat';
@@ -14,6 +15,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final Firestore _firestore = Firestore.instance;
   FirebaseUser _firebaseUser;
   String _messageText;
+  TextEditingController messageFieldController;
 
   void _getCurrentUser() async {
     try {
@@ -30,6 +32,13 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _getCurrentUser();
+    messageFieldController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    messageFieldController.dispose();
   }
 
   @override
@@ -59,6 +68,48 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+              stream: _firestore.collection('messages').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Text(
+                      'No messages!',
+                      style: TextStyle(
+                        fontSize: 50.0,
+                      ),
+                    ),
+                  );
+                }
+                List<Message> messageWidgets = [];
+                final messages = snapshot.data.documents;
+                messages.sort((a, b) {
+                  return a.data['timeStamp'].compareTo(b.data['timeStamp']);
+                });
+                for (var message in messages) {
+                  final senderId = message.data['senderId'];
+                  final senderEmail = message.data['senderEmail'];
+                  final text = message.data['text'];
+                  final messageWidget = Message(
+                    sender: senderEmail ?? '',
+                    text: text ?? '',
+                    sendBySelf: senderId == _firebaseUser.uid,
+                  );
+                  messageWidgets.add(messageWidget);
+                }
+                return Expanded(
+                  child: ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                        vertical: 20.0,
+                      ),
+                      itemCount: messageWidgets.length,
+                      itemBuilder: (context, index) {
+                        return messageWidgets[index];
+                      }),
+                );
+              },
+            ),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -66,24 +117,46 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageFieldController,
                       onChanged: (value) {
-                        _messageText = value.toString().trim();
+                        if (value != null) {
+                          _messageText = value.toString().trim();
+                        }
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   FlatButton(
-                    onPressed: () {
-                      _firestore.collection('messages').add({
-                        'sender': _firebaseUser.email,
-                        'text': _messageText,
-                        'timestamp': Timestamp.fromMillisecondsSinceEpoch(
-                            DateTime.now().millisecondsSinceEpoch),
+                    onPressed: () async {
+                      setState(() {
+                        messageFieldController.clear();
                       });
+                      if (_messageText != null) {
+                        await _firestore.collection('messages').add({
+                          'senderId': _firebaseUser.uid ?? '',
+                          'senderEmail': _firebaseUser.email ?? '',
+                          'text': _messageText ?? '',
+                          'timeStamp': Timestamp.fromMillisecondsSinceEpoch(
+                                  DateTime.now().millisecondsSinceEpoch) ??
+                              '',
+                        });
+                      }
+                      _messageText = null;
                     },
-                    child: Text(
-                      'Send',
-                      style: kSendButtonTextStyle,
+                    child: Material(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(50.0),
+                      elevation: 5.0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 8,
+                        ),
+                        child: Text(
+                          'Send',
+                          style: kSendButtonTextStyle,
+                        ),
+                      ),
                     ),
                   ),
                 ],

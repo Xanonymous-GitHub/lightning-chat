@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lightning_chat/screens/login_screen.dart';
 import 'package:lightning_chat/widgets/rounded_button.dart';
 import 'package:lightning_chat/widgets/rounded_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lightning_chat/screens/chat_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -15,6 +15,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String email, password;
   bool showSpinner = false;
+  TextEditingController emailController, passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +55,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               RoundedTextField(
                 hintText: 'Enter your email',
+                textEditingController: emailController,
                 prefixIcon: Icon(
                   Icons.email,
                   color: Colors.grey,
@@ -54,6 +70,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               RoundedTextField(
                 hintText: 'Enter your password',
+                textEditingController: passwordController,
                 prefixIcon: Icon(
                   Icons.lock,
                   color: Colors.grey,
@@ -79,14 +96,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       password: password,
                     );
                     if (_newUser != null) {
-                      await Navigator.pushNamed(context, ChatScreen.sName);
+                      await Navigator.pushNamed(context, LoginScreen.sName);
                     }
                   } on Exception catch (e) {
                     print(e);
                   }
                   setState(() {
+                    emailController.clear();
+                    passwordController.clear();
                     showSpinner = false;
                   });
+                  email = null;
+                  password = null;
                 },
               ),
             ],

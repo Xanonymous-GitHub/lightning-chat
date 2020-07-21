@@ -15,6 +15,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String email, password;
   bool showSpinner = false;
+  TextEditingController emailController, passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               RoundedTextField(
                 hintText: 'Enter your email',
+                textEditingController: emailController,
                 prefixIcon: Icon(
                   Icons.email,
                   color: Colors.grey,
@@ -54,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               RoundedTextField(
                 hintText: 'Enter your password.',
+                textEditingController: passwordController,
                 prefixIcon: Icon(
                   Icons.lock,
                   color: Colors.grey,
@@ -85,8 +102,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     print(e);
                   }
                   setState(() {
+                    emailController.clear();
+                    passwordController.clear();
                     showSpinner = false;
                   });
+                  email = null;
+                  password = null;
                 },
               ),
             ],

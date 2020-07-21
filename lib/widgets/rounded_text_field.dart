@@ -7,9 +7,11 @@ class RoundedTextField extends StatelessWidget {
   final Icon prefixIcon;
   final bool obscureText;
   final TextInputType keyboardType;
+  final TextEditingController textEditingController;
 
   const RoundedTextField({
     @required this.handleChanged,
+    @required this.textEditingController,
     this.hintText,
     this.prefixIcon,
     this.obscureText,
@@ -17,9 +19,12 @@ class RoundedTextField extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  void clearTextInput() {}
+
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: textEditingController,
       keyboardType: keyboardType ?? TextInputType.text,
       obscureText: obscureText ?? false,
       onChanged: handleChanged,
