@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lightning_chat/constants.dart';
+import 'package:lightning_chat/utils/constants.dart';
 
 class RoundedTextField extends StatelessWidget {
   final String hintText;

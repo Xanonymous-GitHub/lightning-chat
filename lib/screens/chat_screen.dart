@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lightning_chat/constants.dart';
+import 'package:lightning_chat/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatScreen extends StatefulWidget {
   static final String sName = 'chat';
@@ -10,7 +11,9 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
   FirebaseUser _firebaseUser;
+  String _messageText;
 
   void _getCurrentUser() async {
     try {
@@ -42,8 +45,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 Navigator.pop(context);
               }),
         ],
-        title: Text('⚡️Chat'),
-        backgroundColor: Colors.lightBlueAccent,
+        title: Text(
+          '⚡  Mr.Coding',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.deepPurple,
       ),
       body: SafeArea(
         child: Column(
@@ -58,14 +67,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        //Do something with the user input.
+                        _messageText = value.toString().trim();
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   FlatButton(
                     onPressed: () {
-                      //Implement send functionality.
+                      _firestore.collection('messages').add({
+                        'sender': _firebaseUser.email,
+                        'text': _messageText,
+                        'timestamp': Timestamp.fromMillisecondsSinceEpoch(
+                            DateTime.now().millisecondsSinceEpoch),
+                      });
                     },
                     child: Text(
                       'Send',

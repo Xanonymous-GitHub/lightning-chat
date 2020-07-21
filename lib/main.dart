@@ -3,6 +3,7 @@ import 'package:lightning_chat/screens/welcome_screen.dart';
 import 'package:lightning_chat/screens/login_screen.dart';
 import 'package:lightning_chat/screens/registration_screen.dart';
 import 'package:lightning_chat/screens/chat_screen.dart';
+//import 'package:lightning_chat/route/router.dart';
 
 void main() => runApp(FlashChat());
 
