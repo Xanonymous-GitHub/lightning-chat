@@ -10,7 +10,7 @@ class RoundedTextField extends StatelessWidget {
   final TextEditingController textEditingController;
 
   const RoundedTextField({
-    @required this.handleChanged,
+    this.handleChanged,
     @required this.textEditingController,
     this.hintText,
     this.prefixIcon,

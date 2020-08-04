@@ -16,6 +16,7 @@ class Message extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
+        color: Colors.transparent,
         child: Column(
           crossAxisAlignment:
               sendBySelf ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -32,7 +33,7 @@ class Message extends StatelessWidget {
             ),
             Material(
               borderRadius: BorderRadius.circular(20.0),
-              elevation: 5.0,
+              elevation: 2.0,
               color: sendBySelf ? Colors.blueAccent : Colors.deepPurple,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15.0, 2.0, 15.0, 4.0),

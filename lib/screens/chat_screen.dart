@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lightning_chat/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lightning_chat/widgets/message.dart';
+import 'package:lightning_chat/shared_widgets/message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -17,6 +17,7 @@ class _ChatScreenState extends State<ChatScreen> {
   FirebaseUser _firebaseUser;
   String _messageText;
   TextEditingController messageFieldController;
+  ScrollController messageListViewController;
 
   void _getCurrentUser() async {
     try {
@@ -29,35 +30,49 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  void scrollToEnd() {
+    messageListViewController.animateTo(
+      messageListViewController.position.maxScrollExtent,
+      duration: const Duration(
+        milliseconds: 100,
+      ),
+      curve: Curves.easeOut,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _getCurrentUser();
     messageFieldController = TextEditingController();
+    messageListViewController = ScrollController();
   }
 
   @override
   void dispose() {
     super.dispose();
     messageFieldController.dispose();
+    messageListViewController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffe3dfc8),
       appBar: AppBar(
         leading: null,
-        actions: <Widget>[
+        actions: [
           IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () async {
-                await _auth.signOut();
-                SharedPreferences _sharedPreferences =
-                    await SharedPreferences.getInstance();
-                _sharedPreferences.remove('userEmail');
-                _sharedPreferences.remove('userPassword');
-                Navigator.pop(context);
-              }),
+            icon: Icon(Icons.close),
+            onPressed: () async {
+              await _auth.signOut();
+              SharedPreferences _sharedPreferences =
+                  await SharedPreferences.getInstance();
+              _sharedPreferences.remove('userEmail');
+              _sharedPreferences.remove('userPassword');
+              Navigator.pop(context);
+            },
+          ),
         ],
         title: Text(
           '⚡  Mr.Coding',
@@ -66,13 +81,13 @@ class _ChatScreenState extends State<ChatScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff96bb7c),
       ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             StreamBuilder<QuerySnapshot>(
               stream: _firestore.collection('messages').snapshots(),
               builder: (context, snapshot) {
@@ -88,9 +103,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
                 List<Message> messageWidgets = [];
                 final messages = snapshot.data.documents;
-                messages.sort((a, b) {
-                  return a.data['timeStamp'].compareTo(b.data['timeStamp']);
-                });
+                messages.sort(
+                  (a, b) {
+                    return a.data['timeStamp'].compareTo(b.data['timeStamp']);
+                  },
+                );
                 for (var message in messages) {
                   final senderId = message.data['senderId'];
                   final senderEmail = message.data['senderEmail'];
@@ -104,14 +121,16 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
                 return Expanded(
                   child: ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10.0,
-                        vertical: 20.0,
-                      ),
-                      itemCount: messageWidgets.length,
-                      itemBuilder: (context, index) {
-                        return messageWidgets[index];
-                      }),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 20.0,
+                    ),
+                    itemCount: messageWidgets.length,
+                    controller: messageListViewController,
+                    itemBuilder: (context, index) {
+                      return messageWidgets[index];
+                    },
+                  ),
                 );
               },
             ),
@@ -133,24 +152,28 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   FlatButton(
                     onPressed: () async {
-                      setState(() {
-                        messageFieldController.clear();
-                      });
+                      setState(
+                        () {
+                          messageFieldController.clear();
+                        },
+                      );
                       if (_messageText != null) {
-                        await _firestore.collection('messages').add({
-                          'senderId': _firebaseUser.uid ?? '',
-                          'senderEmail': _firebaseUser.email ?? '',
-                          'text': _messageText ?? '',
-                          'timeStamp': Timestamp.fromMillisecondsSinceEpoch(
-                                  DateTime.now().millisecondsSinceEpoch) ??
-                              '',
-                        });
+                        await _firestore.collection('messages').add(
+                          {
+                            'senderId': _firebaseUser.uid ?? '',
+                            'senderEmail': _firebaseUser.email ?? '',
+                            'text': _messageText ?? '',
+                            'timeStamp': Timestamp.fromMillisecondsSinceEpoch(
+                                    DateTime.now().millisecondsSinceEpoch) ??
+                                '',
+                          },
+                        );
                       }
                       _messageText = null;
                     },
                     child: Material(
                       color: Colors.deepPurple,
-                      borderRadius: BorderRadius.circular(50.0),
+                      borderRadius: BorderRadius.circular(10.0),
                       elevation: 5.0,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
